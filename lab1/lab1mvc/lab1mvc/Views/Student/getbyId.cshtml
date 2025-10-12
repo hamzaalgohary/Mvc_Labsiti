@@ -1,0 +1,57 @@
+﻿<h1> @Model</h1>
+
+
+
+@* <div class="card" style="width: 18rem;">
+    <img src="..." class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title">Student Details</h5>
+        <p class="card-text">@Model</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+</div> *@
+
+@* @model lab1mvc.Models.Student
+
+@{
+    ViewData["Title"] = "Student Details";
+}
+
+<div class="container">
+    <h1>Student Details</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">SSN:</dt>
+                <dd class="col-sm-9">@Model.SSN</dd>
+
+                <dt class="col-sm-3">Name:</dt>
+                <dd class="col-sm-9">@Model.Name</dd>
+
+                <dt class="col-sm-3">Age:</dt>
+                <dd class="col-sm-9">@Model.Age</dd>
+
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+
+                <dt class="col-sm-3">Address:</dt>
+                <dd class="col-sm-9">@Model.Address</dd>
+
+                <dt class="col-sm-3">Image:</dt>
+                <dd class="col-sm-9">
+                    @if (!string.IsNullOrEmpty(Model.Image))
+                    {
+                        <img src="~/images/@Model.Image" alt="@Model.Name" width="100" class="img-thumbnail" />
+                    }
+                    else
+                    {
+                        <span>No image</span>
+                    }
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <a href="@Url.Action("getall")" class="btn btn-secondary mt-3">Back to List</a>
+</div> *@

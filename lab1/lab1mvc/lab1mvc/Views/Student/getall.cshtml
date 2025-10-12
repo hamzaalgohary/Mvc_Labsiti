@@ -1,0 +1,81 @@
+﻿
+@* i create a table by using bootstrap *@
+<table class="table">
+    @* table header and scope this is column*@
+    <thead>
+        <tr>
+            <th scope="col">SSN</th>
+            <th scope="col">Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Image</th>
+            <th scope="col">Address</th>
+            <th scope="col">Email</th>
+        </tr>
+    </thead>
+    <tbody>
+       @* for loop student in model -- @display s  *@
+        @foreach (var student in Model)
+        {
+            <tr>
+                <th>@student.SSN</th>
+                <td>@student.Name</td>
+                <td>@student.Age</td>
+                <td>@student.Image</td>
+                <td>@student.Address</td>
+                <td>@student.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@* @model IEnumerable<lab1mvc.Models.Student>
+
+@{
+    ViewData["Title"] = "All Students";
+}
+
+<div class="container">
+    <h1>All Students</h1>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">SSN</th>
+                <th scope="col">Name</th>
+                <th scope="col">Age</th>
+                <th scope="col">Image</th>
+                <th scope="col">Address</th>
+                <th scope="col">Email</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <th scope="row">@student.SSN</th>
+                    <td>@student.Name</td>
+                    <td>@student.Age</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(student.Image))
+                        {
+                            <img src="~/images/@student.Image" alt="@student.Name" width="50" class="img-thumbnail" />
+                        }
+                        else
+                        {
+                            <span>No image</span>
+                        }
+                    </td>
+                    <td>@student.Address</td>
+                    <td>
+                        <a href="mailt:@student.Email">@student.Email</a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("getbyId", new { id = student.SSN })" class="btn btn-info btn-sm">View Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div> *@
