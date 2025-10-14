@@ -1,0 +1,33 @@
+﻿
+
+<h2>Add Department</h2>
+
+<form action="AddNewDepartment">
+    <div class="form-group mb-2">
+        <label>Name</label>
+        <input name="name" class="form-control" />
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Manager</label>
+        <input name="manager" class="form-control" />
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Location</label>
+        <input name="location" class="form-control" />
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Branch</label>
+        <select name="branch" class="form-control">
+            @foreach (var value in Enum.GetValues(typeof(Branch)))
+            {
+                <option value="@value">@value</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Add Department</button>
+</form>
+

@@ -1,0 +1,35 @@
+﻿
+<h2>All Departments</h2>
+
+<div class="mb-3 text-end">
+    <a href="/Department/AddDepartment" class="btn btn-success">➕ Add New Department</a>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Manager</th>
+            <th>Location</th>
+            <th>Branch</th>
+            <th>Students</th>
+            <th>Courses</th>
+            <th>Instructors</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dept in Model)
+        {
+            <tr>
+                <td>@dept.Id</td>
+                <td>@dept.Name</td>
+                <td>@dept.Manager</td>
+                <td>@dept.Location</td>
+                <td>@dept.Branch</td>
+                <td>@dept.Students.Count</td>
+                <td>@dept.Courses.Count</td>
+                <td>@dept.Instructors.Count</td>
+            </tr>
+        }
+    </tbody>
+</table>

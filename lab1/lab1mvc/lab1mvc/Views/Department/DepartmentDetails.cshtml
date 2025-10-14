@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Department Details";
+}
+
+<h2>Department Details</h2>
+
+<div class="card p-3 mb-3" style="max-width:600px;">
+    <p><strong>ID:</strong> @Model.Id</p>
+    <p><strong>Name:</strong> @Model.Name</p>
+    <p><strong>Manager:</strong> @Model.Manager</p>
+    <p><strong>Location:</strong> @Model.Location</p>
+    <p><strong>Branch:</strong> @Model.Branch</p>
+    <p><strong>Students:</strong> @Model.Students.Count</p>
+    <p><strong>Courses:</strong> @Model.Courses.Count</p>
+    <p><strong>Instructors:</strong> @Model.Instructors.Count</p>
+</div>
+

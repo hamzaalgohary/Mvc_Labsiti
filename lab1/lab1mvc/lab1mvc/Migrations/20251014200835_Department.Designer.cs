@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using lab1mvc.context;
 
@@ -10,9 +11,11 @@ using lab1mvc.context;
 namespace lab1mvc.Migrations
 {
     [DbContext(typeof(dblab1))]
-    partial class dblab1ModelSnapshot : ModelSnapshot
+    [Migration("20251014200835_Department")]
+    partial class Department
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
