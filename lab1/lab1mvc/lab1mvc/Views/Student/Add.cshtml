@@ -1,4 +1,5 @@
-﻿<form action="/Student/AddNew">
+﻿@* lab2 &1 *@
+@* <form action="/Student/AddNew">
     <div class="mb-3">
         <label>Name</label>
         <input name="Name" class="form-control" required />
@@ -24,4 +25,46 @@
         <input name="Address" type="text" class="form-control" />
     </div>
     <button type="submit">Add Student</button>
+</form> *@
+@* lab3 *@
+@model lab1mvc.Models.Student
+
+<form asp-action="AddNew" asp-controller="Student" method="post">
+    <div class="mb-3">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Age"></label>
+        <input asp-for="Age" type="number" class="form-control" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Image"></label>
+        <input asp-for="Image" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Address"></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+
+    <!-- Proper ASP.NET Dropdown -->
+    <div class="mb-3">
+        <label asp-for="DepartmentId"></label>
+        <select asp-for="DepartmentId" asp-items="ViewBag.Departments" class="form-control">
+            <option value="">-- Select Department --</option>
+        </select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Student</button>
 </form>

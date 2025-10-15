@@ -1,0 +1,40 @@
+﻿@model List<lab1mvc.Models.Instructor>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>All Instructors</h2>
+<a asp-action="Add" class="btn btn-primary mb-3">Add New Instructor</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Salary</th>
+            <th>Address</th>
+            <th>Department</th>
+            <th>Courses Count</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ins in Model)
+        {
+            <tr>
+                <td>@ins.Id</td>
+                <td>@ins.Name</td>
+                <td>@ins.Age</td>
+                <td>@ins.Salary</td>
+                <td>@ins.Address</td>
+                <td>@ins.DepartmentId</td>
+                <td>@(ins.CourseInstructors?.Count ?? 0)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@ins.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@ins.Id" class="btn btn-danger btn-sm">
+                        delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

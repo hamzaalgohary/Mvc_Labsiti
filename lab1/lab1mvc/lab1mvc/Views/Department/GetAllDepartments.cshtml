@@ -1,9 +1,17 @@
-﻿
+﻿@model List<Department>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+
 <h2>All Departments</h2>
 
-<div class="mb-3 text-end">
+@* <div class="mb-3 text-end">
     <a href="/Department/AddDepartment" class="btn btn-success">➕ Add New Department</a>
+</div> *@
+<div class="mb-3 text-end">
+    <a asp-action="AddDepartment" class="btn btn-success">➕ Add New Department</a>
 </div>
+
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -15,6 +23,7 @@
             <th>Students</th>
             <th>Courses</th>
             <th>Instructors</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -26,9 +35,16 @@
                 <td>@dept.Manager</td>
                 <td>@dept.Location</td>
                 <td>@dept.Branch</td>
-                <td>@dept.Students.Count</td>
-                <td>@dept.Courses.Count</td>
-                <td>@dept.Instructors.Count</td>
+                <td>@dept.Students?.Count</td>
+                <td>@dept.Courses?.Count</td>
+                <td>@dept.Instructors?.Count</td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@dept.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@dept.Id" class="btn btn-danger btn-sm"
+                      >
+                        delete
+                    </a>
+                </td>
             </tr>
         }
     </tbody>
