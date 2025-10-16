@@ -1,4 +1,5 @@
-﻿@model lab1mvc.Models.Student
+﻿@* lab3 *@
+@* @model lab1mvc.Models.Student
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <h2>Edit Student</h2>
@@ -50,4 +51,21 @@
 
     <button type="submit" class="btn btn-success">Update</button>
     <a asp-action="getall" class="btn btn-secondary">Cancel</a>
+</form> *@
+
+
+
+@* lab4 *@
+@model lab1mvc.Models.Student
+@{
+    ViewData["Title"] = "Edit Student";
+}
+
+<h2>Edit Student</h2>
+
+<form asp-action="Edit" asp-controller="Student" method="post">
+    <input type="hidden" asp-for="SSN" />
+    @Html.Partial("_StudentForm", Model)
+    <button type="submit" class="btn btn-success">Save Changes</button>
 </form>
+

@@ -47,7 +47,7 @@ namespace lab1mvc.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddNew(Instructor instructor)
+        public IActionResult Add(Instructor instructor)
         {
             if (instructor.Name != null)
             {
@@ -69,7 +69,6 @@ namespace lab1mvc.Controllers
             ViewBag.Departments = _context.Departments.ToList();
             return View(instructor);
         }
-        [HttpPost]
         [HttpPost]
         public IActionResult Edit(Instructor updatedInstructor)
         {

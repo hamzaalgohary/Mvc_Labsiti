@@ -1,0 +1,29 @@
+﻿@model lab1mvc.Models.Course
+
+<div class="form-group mb-2">
+    <label>Name</label>
+    <input asp-for="Name" class="form-control" />
+</div>
+
+<div class="form-group mb-2">
+    <label>Topic</label>
+    <input asp-for="Topic" class="form-control" />
+</div>
+
+<div class="form-group mb-2">
+    <label>Degree</label>
+    <input asp-for="Degree" class="form-control" type="number" />
+</div>
+
+<div class="form-group mb-2">
+    <label>MinDegree</label>
+    <input asp-for="MinDegree" class="form-control" type="number" />
+</div>
+
+<div class="form-group mb-2">
+    <label>Department</label>
+    <select asp-for="DepartmentId" class="form-control"
+            asp-items="@(new SelectList(ViewBag.Departments, "Id", "Name"))">
+        <option value="">-- Select Department --</option>
+    </select>
+</div>

@@ -1,0 +1,8 @@
+﻿@model lab1mvc.Models.Course
+
+<h2>Add New Course</h2>
+
+<form asp-action="Add">
+    @Html.Partial("_CourseFormPartial", Model)
+    <button type="submit" class="btn btn-success mt-3">Add</button>
+</form>

@@ -1,4 +1,66 @@
-﻿@model List<Student>
+﻿@* lab4 *@
+@model List<Student>
+<div class="mb-3 text-end">
+    <a href="/Student/Add" class="btn btn-success">➕ Add New Student</a>
+</div>
+<h2>All Students</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">SSN</th>
+            <th scope="col">Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">deprtament</th>
+            <th>
+                Image
+            </th>
+            <th scope="col">Address</th>
+            <th scope="col">Email</th>
+            <th>edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <th>@student.SSN</th>
+                <td>@student.Name</td>
+                <td>@student.Age</td>
+                <td>@student.DepartmentId</td>
+                <th>
+                    <img src="~/@student.Image"
+                         class="img-thumbnail rounded-circle shadow-sm"
+                         style="width: 80px; height: 80px; object-fit: cover;" />
+                </th>
+
+
+
+                <td>@student.Address</td>
+                <td>@student.Email</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@student.SSN" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@student.SSN" class="btn btn-danger btn-sm">
+                        delete
+                    </a>
+                    <a href="@Url.Action("Details", "Student", new { id = student.SSN })" class="btn btn-info btn-sm">
+                        Details
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+@* lab3 *@
+@* @model List<Student>
 <div class="mb-3 text-end">
     <a href="/Student/Add" class="btn btn-success">➕ Add New Student</a>
 </div>
@@ -45,7 +107,7 @@
             </tr>
         }
     </tbody>
-</table>
+</table> *@
 
 @* lab1 and2 *@
 @* @model IEnumerable<lab1mvc.Models.Student>

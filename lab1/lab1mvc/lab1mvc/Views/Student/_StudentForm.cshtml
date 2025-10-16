@@ -1,0 +1,39 @@
+﻿@model lab1mvc.Models.Student
+
+<div class="mb-3">
+    <label asp-for="Name"></label>
+    <input asp-for="Name" class="form-control" />
+</div>
+
+<div class="mb-3">
+    <label asp-for="Age"></label>
+    <input asp-for="Age" type="number" class="form-control" />
+</div>
+
+<div class="mb-3">
+    <label asp-for="Email"></label>
+    <input asp-for="Email" class="form-control" />
+</div>
+
+<div class="mb-3">
+    <label asp-for="Image"></label>
+    <input asp-for="Image" class="form-control" />
+</div>
+
+<div class="mb-3">
+    <label asp-for="Address"></label>
+    <input asp-for="Address" class="form-control" />
+</div>
+
+<div class="mb-3">
+    <label asp-for="DepartmentId">Department</label>
+    <select asp-for="DepartmentId" asp-items="ViewBag.Departments" class="form-control">
+        <option value="">-- Select Department --</option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label>Courses</label>
+    <select name="selectedCourses" asp-items="ViewBag.Courses" class="form-select" multiple></select>
+    <small class="text-muted">Hold Ctrl (or Cmd on Mac) to select multiple courses.</small>
+</div>

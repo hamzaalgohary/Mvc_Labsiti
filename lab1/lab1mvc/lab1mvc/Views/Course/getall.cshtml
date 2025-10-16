@@ -1,0 +1,35 @@
+﻿@model List<Course>
+<h2>All Courses</h2>
+
+<a class="btn btn-primary mb-3" href="/Course/Add">Add New Course</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Topic</th>
+            <th>Degree</th>
+            <th>MinDegree</th>
+            <th>DepartmentId</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Id</td>
+                <td>@c.Name</td>
+                <td>@c.Topic</td>
+                <td>@c.Degree</td>
+                <td>@c.MinDegree</td>
+                <td>@c.DepartmentId</td>
+                <td>
+                    <a href="/Course/Edit/@c.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="/Course/Delete/@c.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

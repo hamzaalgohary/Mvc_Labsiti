@@ -37,7 +37,7 @@ namespace lab1mvc.Controllers
 
         }
         //get id
-        public IActionResult GetDepartmentbyid(int id)
+        public IActionResult Getbyid(int id)
         {
             var dept = _context.Departments.FirstOrDefault(d => d.Id == id);
             if (dept == null)

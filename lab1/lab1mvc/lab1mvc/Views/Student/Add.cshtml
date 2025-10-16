@@ -27,7 +27,7 @@
     <button type="submit">Add Student</button>
 </form> *@
 @* lab3 *@
-@model lab1mvc.Models.Student
+@* @model lab1mvc.Models.Student
 
 <form asp-action="AddNew" asp-controller="Student" method="post">
     <div class="mb-3">
@@ -67,4 +67,18 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Add Student</button>
+</form> *@
+
+@* lab4 *@
+@model lab1mvc.Models.Student
+@{
+    ViewData["Title"] = "Add Student";
+}
+
+<h2>Add Student</h2>
+
+<form asp-action="Add" asp-controller="Student" method="post">
+    @Html.Partial("_StudentForm", Model)
+    <button type="submit" class="btn btn-primary">Add Student</button>
 </form>
+

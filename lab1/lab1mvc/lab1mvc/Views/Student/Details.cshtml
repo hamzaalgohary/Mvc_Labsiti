@@ -1,0 +1,82 @@
+﻿@model lab1mvc.Models.Student
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-success">Student Details</h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title">@Model.Name</h4>
+            <p class="card-text"><strong>SSN:</strong> @Model.SSN</p>
+        </div>
+    </div>
+
+    <h4 class="mb-3">Courses & Grades</h4>
+
+    @if (Model.StudentCourses == null || !Model.StudentCourses.Any())
+    {
+        <div class="alert alert-warning">This student is not enrolled in any courses.</div>
+    }
+    else
+    {
+        <table class="table table-hover table-bordered align-middle shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Course Name</th>
+                    <th>Topic</th>
+                    <th>Degree</th>
+                    <th>Min Degree</th>
+                    <th>Student Grade</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sc in Model.StudentCourses)
+                {
+                    var course = sc.Course;
+                    var colorClass = sc.Grade < course.MinDegree ? "text-danger fw-bold" : "text-success fw-bold";
+
+                    <tr>
+                        <td>@course.Name</td>
+                        <td>@course.Topic</td>
+                        <td>@course.Degree</td>
+                        <td>@course.MinDegree</td>
+                        <td class="@colorClass">@sc.Grade</td>
+                        <td>
+                            <form asp-action="UpdateGrade" method="post" class="d-flex align-items-center">
+                                <input type="hidden" name="studentSSN" value="@Model.SSN" />
+                                <input type="hidden" name="courseId" value="@course.Id" />
+                                <input type="number" name="grade" step="0.1" min="0" max="@course.Degree"
+                                       value="@sc.Grade" class="form-control form-control-sm me-2" style="width: 90px;" />
+                                <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <a href="@Url.Action("GetAll", "Student")" class="btn btn-secondary mt-3">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+    }
+
+    table {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    form input[type="number"] {
+        text-align: center;
+    }
+</style>
