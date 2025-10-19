@@ -1,6 +1,82 @@
 ﻿@model lab1mvc.Models.Instructor
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
+<h2 class="text-success">Add New Instructor</h2>
+
+<form asp-action="Add" method="post" novalidate>
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Age" class="form-label"></label>
+        <input asp-for="Age" class="form-control" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Salary" class="form-label"></label>
+        <input asp-for="Salary" class="form-control" />
+        <span asp-validation-for="Salary" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label"></label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Image" class="form-label"></label>
+        <input asp-for="Image" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DepartmentId" class="form-label"></label>
+        <select asp-for="DepartmentId" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Departments, "Id", "Name"))">
+            <option value="">-- Select Department --</option>
+        </select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Add Instructor</button>
+    <a asp-action="GetAll" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--Lab 1 to 4-->
+@* @model lab1mvc.Models.Instructor
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 <h2>Add New Instructor</h2>
 
 <form asp-action="AddNew" method="post">
@@ -39,4 +115,4 @@
 
     <button type="submit" class="btn btn-success">Add Instructor</button>
     <a asp-action="GetAll" class="btn btn-secondary">Cancel</a>
-</form>
+</form> *@

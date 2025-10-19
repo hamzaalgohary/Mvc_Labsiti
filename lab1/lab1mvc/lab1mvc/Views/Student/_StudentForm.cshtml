@@ -1,4 +1,88 @@
 ﻿@model lab1mvc.Models.Student
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!--  Validation Summary -->
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+<div class="mb-3">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control" placeholder="Enter student name" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Age" class="form-label"></label>
+    <input asp-for="Age" type="number" class="form-control" placeholder="Enter student age" />
+    <span asp-validation-for="Age" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Email" class="form-label"></label>
+    <input asp-for="Email" class="form-control" placeholder="example@mail.com" />
+    <span asp-validation-for="Email" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Image" class="form-label"></label>
+    <input asp-for="Image" class="form-control" placeholder="Image path or URL" />
+</div>
+
+<div class="mb-3">
+    <label asp-for="Address" class="form-label"></label>
+    <input asp-for="Address" class="form-control" placeholder="Enter address" />
+    <span asp-validation-for="Address" class="text-danger"></span>
+</div>
+
+<div class="form-group mb-3">
+    <label asp-for="DepartmentId" class="form-label"></label>
+    <select asp-for="DepartmentId" asp-items="ViewBag.Departments" class="form-control">
+        <option value="">-- Select Department --</option>
+    </select>
+    <span asp-validation-for="DepartmentId" class="text-danger"></span>
+</div>
+
+@* to show available course if available *@
+@if (ViewBag.Courses != null && ((IEnumerable<SelectListItem>)ViewBag.Courses).Any())
+{
+    <div class="form-group mb-3">
+        <label class="form-label">Courses</label>
+        <select name="selectedCourses" asp-items="ViewBag.Courses" multiple class="form-control"></select>
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">
+        📘 No courses available at the moment.
+    </div>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* lab4 *@
+@* @model lab1mvc.Models.Student
 
 <div class="mb-3">
     <label asp-for="Name"></label>
@@ -36,4 +120,4 @@
     <label>Courses</label>
     <select name="selectedCourses" asp-items="ViewBag.Courses" class="form-select" multiple></select>
     <small class="text-muted">Hold Ctrl (or Cmd on Mac) to select multiple courses.</small>
-</div>
+</div> *@

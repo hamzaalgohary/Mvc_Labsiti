@@ -12,8 +12,7 @@ namespace lab1mvc.Controllers
     {
         dblab1 _context = new dblab1();
 
-        //getalldepartment
-        public IActionResult GetAllDepartments()
+        public IActionResult GetAll()
         {
             var depts = _context.Departments
                          .Include(d => d.Students)
@@ -24,7 +23,7 @@ namespace lab1mvc.Controllers
             return View(depts);
         }
 
-        //getbyname 
+
         public IActionResult GetByName(string name)
         {
             var dept = _context.Departments.FirstOrDefault(d => d.Name == name);
@@ -36,7 +35,6 @@ namespace lab1mvc.Controllers
             return View("DepartmentDetails", dept);
 
         }
-        //get id
         public IActionResult Getbyid(int id)
         {
             var dept = _context.Departments.FirstOrDefault(d => d.Id == id);
@@ -48,21 +46,19 @@ namespace lab1mvc.Controllers
             return View("DepartmentDetails", dept);
 
         }
-        //add
-        public IActionResult AddDepartment()
+        public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
 
-        //add new
-        public IActionResult AddNewDepartment(Department department)
+        public IActionResult Add(Department department)
         {
             if (department.Name != null)
             {
                 _context.Departments.Add(department);
                 _context.SaveChanges();
-                return RedirectToAction(actionName: "GetAllDepartments");
+                return RedirectToAction(actionName: "GetAll");
 
 
             }
@@ -70,7 +66,7 @@ namespace lab1mvc.Controllers
 
         }
 
-        //edit
+
         public IActionResult Edit(int id)
         {
             var dept = _context.Departments.FirstOrDefault(d => d.Id == id);
@@ -79,7 +75,6 @@ namespace lab1mvc.Controllers
         }
 
         [HttpPost]
-        //edit
         public IActionResult Edit(Department department)
         {
 
@@ -87,20 +82,139 @@ namespace lab1mvc.Controllers
             _context.Update(department);
             _context.SaveChanges();
 
-            return RedirectToAction("GetAllDepartments");
+            return RedirectToAction("GetAll");
         }
 
-        //delete
+        [HttpPost]
         public IActionResult Delete(int id)
         {
-            var dept = _context.Departments.FirstOrDefault(d => d.Id == id);
+            var dept = _context.Departments
+                .Include(d => d.Students)
+                .Include(d => d.Courses)
+                .FirstOrDefault(d => d.Id == id);
 
+            if (dept == null)
+                return Json(new { success = false, message = "Department not found." });
+
+            if (dept.Students.Any())
+            {
+                return Json(new { success = false, message = "❌ Cannot delete this department because it has students." });
+            }
 
             _context.Departments.Remove(dept);
             _context.SaveChanges();
 
-            return RedirectToAction("GetAllDepartments");
+            return Json(new { success = true, message = "✅ Department deleted successfully. All related courses were deleted." });
+        }
+        public IActionResult Index()
+        {
+
+            return View();
         }
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+//lab1mvc to lab4
+
+//        //getalldepartment
+//        public IActionResult GetAll()
+//        {
+//            var depts = _context.Departments
+//                         .Include(d => d.Students)
+//                         .Include(d => d.Courses)
+//                         .Include(d => d.Instructors)
+//                         .ToList();
+
+//            return View(depts);
+//        }
+
+//        //getbyname 
+//        public IActionResult GetByName(string name)
+//        {
+//            var dept = _context.Departments.FirstOrDefault(d => d.Name == name);
+//            if (dept == null)
+//            {
+//                return NotFound();
+
+//            }
+//            return View("DepartmentDetails", dept);
+
+//        }
+//        //get id
+//        public IActionResult Getbyid(int id)
+//        {
+//            var dept = _context.Departments.FirstOrDefault(d => d.Id == id);
+//            if (dept == null)
+//            {
+//                return NotFound();
+
+//            }
+//            return View("DepartmentDetails", dept);
+
+//        }
+//        //add
+//        public IActionResult AddDepartment()
+//        {
+//            return View();
+//        }
+//        [HttpPost]
+
+//        //add new
+//        public IActionResult AddNewDepartment(Department department)
+//        {
+//            if (department.Name != null)
+//            {
+//                _context.Departments.Add(department);
+//                _context.SaveChanges();
+//                return RedirectToAction(actionName: "GetAllDepartments");
+
+
+//            }
+//            return View(viewName: "Add", department);
+
+//        }
+
+//        //edit
+//        public IActionResult Edit(int id)
+//        {
+//            var dept = _context.Departments.FirstOrDefault(d => d.Id == id);
+//            if (dept == null) return NotFound();
+//            return View(dept);
+//        }
+
+//        [HttpPost]
+//        //edit
+//        public IActionResult Edit(Department department)
+//        {
+
+
+//            _context.Update(department);
+//            _context.SaveChanges();
+
+//            return RedirectToAction("GetAllDepartments");
+//        }
+
+//        //delete
+//        public IActionResult Delete(int id)
+//        {
+//            var dept = _context.Departments.FirstOrDefault(d => d.Id == id);
+
+
+//            _context.Departments.Remove(dept);
+//            _context.SaveChanges();
+
+//            return RedirectToAction("GetAllDepartments");
+//        }
+
+//    }
+//}

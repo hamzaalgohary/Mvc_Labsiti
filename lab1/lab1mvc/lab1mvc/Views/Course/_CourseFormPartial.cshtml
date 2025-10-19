@@ -1,4 +1,46 @@
 ﻿@model lab1mvc.Models.Course
+<input asp-for="Id" type="hidden" />
+
+<div class="mb-3">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Degree" class="form-label"></label>
+    <input asp-for="Degree" type="number" class="form-control" />
+    <span asp-validation-for="Degree" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="MinDegree" class="form-label"></label>
+    <input asp-for="MinDegree" type="number" class="form-control" />
+    <span asp-validation-for="MinDegree" class="text-danger"></span>
+</div>
+<div class="form-group mb-3">
+    <label asp-for="Topic" class="form-label"></label>
+    <input asp-for="Topic" class="form-control" />
+    <span asp-validation-for="Topic" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="DepartmentId" class="form-label">Department</label>
+    <select asp-for="DepartmentId" asp-items="ViewBag.Departments" class="form-select">
+        <option value="">-- Select Department --</option>
+    </select>
+    <span asp-validation-for="DepartmentId" class="text-danger"></span>
+</div>
+
+
+
+
+
+
+
+
+
+<!--lab4-->
+@* @model lab1mvc.Models.Course
 
 <div class="form-group mb-2">
     <label>Name</label>
@@ -26,4 +68,4 @@
             asp-items="@(new SelectList(ViewBag.Departments, "Id", "Name"))">
         <option value="">-- Select Department --</option>
     </select>
-</div>
+</div> *@

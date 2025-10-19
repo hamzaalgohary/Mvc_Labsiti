@@ -1,4 +1,47 @@
-﻿@* lab2 &1 *@
+﻿@model lab1mvc.Models.Student
+@{
+    ViewData["Title"] = "Add Student";
+}
+
+<h2 class="text-primary mb-3">Add Student</h2>
+
+<form asp-action="Add" asp-controller="Student" method="post">
+    <partial name="_StudentForm" model="Model" />
+    <button type="submit" class="btn btn-success">Add Student</button>
+    <a asp-action="GetAll" class="btn btn-secondary ms-2">Back to List</a>
+</form>
+section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* lab2 &1 *@
 @* <form action="/Student/AddNew">
     <div class="mb-3">
         <label>Name</label>
@@ -70,7 +113,7 @@
 </form> *@
 
 @* lab4 *@
-@model lab1mvc.Models.Student
+@* @model lab1mvc.Models.Student
 @{
     ViewData["Title"] = "Add Student";
 }
@@ -81,4 +124,4 @@
     @Html.Partial("_StudentForm", Model)
     <button type="submit" class="btn btn-primary">Add Student</button>
 </form>
-
+ *@

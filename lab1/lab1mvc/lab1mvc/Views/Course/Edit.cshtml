@@ -1,4 +1,35 @@
 ﻿@model lab1mvc.Models.Course
+@{
+    ViewData["Title"] = "Edit Course";
+}
+
+<h3 class="mb-3">Edit Course</h3>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    @Html.Partial("_CourseFormPartial", Model)
+
+    <button type="submit" class="btn btn-success">Update</button>
+    <a asp-action="GetAll" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@* @model lab1mvc.Models.Course
 
 <h2>Edit Course</h2>
 
@@ -6,4 +37,4 @@
     <input type="hidden" asp-for="Id" />
     @Html.Partial("_CourseFormPartial", Model)
     <button type="submit" class="btn btn-primary mt-3">Save</button>
-</form>
+</form> *@

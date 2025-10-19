@@ -1,4 +1,99 @@
 ﻿@model List<Course>
+
+<h2 class="mb-3 text-primary">All Courses</h2>
+
+<div class="mb-3 text-end">
+    <a asp-action="Add" class="btn btn-primary mb-3">➕ Add New Course</a>
+</div>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Topic</th>
+            <th>Degree</th>
+            <th>Min Degree</th>
+            <th>Department</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr id="row-@c.Id">
+                <td>@c.Id</td>
+                <td>@c.Name</td>
+                <td>@c.Topic</td>
+                <td>@c.Degree</td>
+                <td>@c.MinDegree</td>
+                <td>@c.DepartmentId</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@c.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <button class="btn btn-danger btn-sm delete-btn" data-id="@c.Id">Delete</button>
+                    <span class="ms-2 fw-semibold message" style="display:none;"></span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).on("click", ".delete-btn", function () {
+            var btn = $(this);
+            var id = btn.data("id");
+            var messageSpan = btn.siblings(".message");
+
+            $.ajax({
+                url: '/Course/Delete/' + id,
+                type: 'POST',
+                success: function (res) {
+                    messageSpan.text(res.message).show();
+
+                    if (res.success) {
+                        messageSpan.css("color", "green");
+                        $("#row-" + id).fadeOut(800, function () {
+                            $(this).remove();
+                        });
+                    } else {
+                        messageSpan.css("color", "red");
+                    }
+                    //massege disappear in 2 second
+                    setTimeout(() => messageSpan.fadeOut(), 2000);
+                },
+                error: function () {
+                    messageSpan.text("⚠️ Something went wrong.").css("color", "red").show();
+                    setTimeout(() => messageSpan.fadeOut(), 2000);
+                }
+            });
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--lab4-->
+@* @model List<Course>
 <h2>All Courses</h2>
 
 <a class="btn btn-primary mb-3" href="/Course/Add">Add New Course</a>
@@ -32,4 +127,4 @@
             </tr>
         }
     </tbody>
-</table>
+</table> *@

@@ -1,13 +1,111 @@
 ﻿@model List<Department>
+
+<h2 class="mb-3 text-primary">All Departments</h2>
+
+<div class="mb-3 text-end">
+    <a asp-action="Add" class="btn btn-primary mb-3">➕ Add New Department</a>
+</div>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Manager</th>
+            <th>Location</th>
+            <th>Branch</th>
+            <th>Students</th>
+            <th>Courses</th>
+            <th>Instructors</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dept in Model)
+        {
+            <tr id="row-@dept.Id">
+                <td>@dept.Id</td>
+                <td>@dept.Name</td>
+                <td>@dept.Manager</td>
+                <td>@dept.Location</td>
+                <td>@dept.Branch</td>
+                <td>@(dept.Students?.Count ?? 0)</td>
+                <td>@(dept.Courses?.Count ?? 0)</td>
+                <td>@(dept.Instructors?.Count ?? 0)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@dept.Id" class="btn btn-warning btn-sm">Edit</a>
+
+                    <button class="btn btn-danger btn-sm delete-btn" data-id="@dept.Id">Delete</button>
+                    <span class="ms-2 fw-semibold message" style="display:none;"></span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).on("click", ".delete-btn", function () {
+            var btn = $(this);
+            var id = btn.data("id");
+            var messageSpan = btn.siblings(".message");
+
+            $.ajax({
+                url: '/Department/Delete/' + id,
+                type: 'POST',
+                success: function (res) {
+                    messageSpan.text(res.message).show();
+
+                    if (res.success) {
+                        messageSpan.css("color", "green");
+                        $("#row-" + id).fadeOut(800, function () {
+                            $(this).remove();
+                        });
+                    } else {
+                        messageSpan.css("color", "red");
+                    }
+
+                    // hide message after few seconds
+                    setTimeout(() => messageSpan.fadeOut(), 3000);
+                },
+                error: function () {
+                    messageSpan.text("⚠️ Something went wrong.").css("color", "red").show();
+                    setTimeout(() => messageSpan.fadeOut(), 3000);
+                }
+            });
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--lab4-->
+@* @model List<Department>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 
 
 <h2>All Departments</h2>
 
-@* <div class="mb-3 text-end">
-    <a href="/Department/AddDepartment" class="btn btn-success">➕ Add New Department</a>
-</div> *@
+
 <div class="mb-3 text-end">
     <a asp-action="AddDepartment" class="btn btn-success">➕ Add New Department</a>
 </div>
@@ -48,4 +146,4 @@
             </tr>
         }
     </tbody>
-</table>
+</table> *@

@@ -20,7 +20,6 @@ namespace lab1mvc.Controllers
             return View(instructors);
         }
 
-        //get id
         public IActionResult GetById(int id)
         {
             var instructor = _context.Instructors.FirstOrDefault(i => i.Id == id);
@@ -30,7 +29,6 @@ namespace lab1mvc.Controllers
 
             return View("Details", instructor);
         }
-        //getbyname
         public IActionResult GetByName(string name)
         {
             var instructor = _context.Instructors.FirstOrDefault(i => i.Name == name);
@@ -40,7 +38,6 @@ namespace lab1mvc.Controllers
 
             return View("Details", instructor);
         }
-        //add
         public IActionResult Add()
         {
             ViewBag.Departments = _context.Departments.ToList();
@@ -60,7 +57,6 @@ namespace lab1mvc.Controllers
             return View("Add", instructor);
         }
 
-        //edit
         public IActionResult Edit(int id)
         {
             var instructor = _context.Instructors.FirstOrDefault(i => i.Id == id);
@@ -82,18 +78,21 @@ namespace lab1mvc.Controllers
 
             return RedirectToAction("GetAll");
         }
+        [HttpPost]
         public IActionResult Delete(int id)
         {
             var instructor = _context.Instructors.FirstOrDefault(i => i.Id == id);
 
+            if (instructor == null)
+                return Json(new { success = false, message = "Instructor not found." });
 
             _context.Instructors.Remove(instructor);
             _context.SaveChanges();
-            return RedirectToAction("GetAll");
+
+            return Json(new { success = true, message = "✅ Instructor deleted successfully." });
         }
+
 
 
     }
 }
-
-

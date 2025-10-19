@@ -1,4 +1,87 @@
-﻿@model Department
+﻿@model lab1mvc.Models.Department
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2 class="text-primary mb-3">Edit Department</h2>
+
+<form asp-action="Edit" asp-controller="Department" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <!-- display all mistake upper model-->
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Manager" class="form-label"></label>
+        <input asp-for="Manager" class="form-control" />
+        <span asp-validation-for="Manager" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Location" class="form-label"></label>
+        <input asp-for="Location" class="form-control" />
+        <span asp-validation-for="Location" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="Branch" class="form-label"></label>
+        <select asp-for="Branch" class="form-control">
+            <option value="">-- Select Branch --</option>
+            @foreach (var value in Enum.GetValues(typeof(lab1mvc.Models.Branch)))
+            {
+                <option value="@value"
+                        selected="@(Model != null && Model.Branch == (lab1mvc.Models.Branch)value)">
+                    @value
+                </option>
+            }
+        </select>
+        <span asp-validation-for="Branch" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Update</button>
+    <a asp-action="GetAll" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--lab4-->
+@* @model Department
 
 <h2>Add Department</h2>
 
@@ -30,7 +113,7 @@
 
     <button type="submit" class="btn btn-success">Add Department</button>
 </form>
-
+ *@
 
 
 @* <form action="AddNewDepartment" method="post">
