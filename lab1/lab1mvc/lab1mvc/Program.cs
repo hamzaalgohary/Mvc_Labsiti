@@ -3,8 +3,10 @@ using lab1mvc.Filters;
 using lab1mvc.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 using Microsoft.Extensions.Options;
+using Serilog;
+using System;
+using lab1mvc.Repository;
 
 
 namespace lab1mvc
@@ -21,15 +23,20 @@ namespace lab1mvc
 
                 var builder = WebApplication.CreateBuilder(args);
 
-                //   use Serilog 
-                //builder.Host.UseSerilog();    
+            //   use Serilog 
+            //builder.Host.UseSerilog();    
 
-                //cashing filter  
-                builder.Services.AddMemoryCache();
-                builder.Services.AddScoped<CachResourceFilter>();
-                builder.Services.AddScoped<FilterInputCashe>();
+            //cashing filter  
+            //builder.Services.AddMemoryCache();
+            //builder.Services.AddScoped<CachResourceFilter>();
+            //builder.Services.AddScoped<FilterInputCashe>();
 
-                builder.Services.AddSession();
+            builder.Services.AddDbContext<dblab1>(options =>
+   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            builder.Services.AddSession();
 
 
                 //builder.Services.AddControllersWithViews();
@@ -37,7 +44,7 @@ namespace lab1mvc
                 {
                     // Global Filters
                     op.Filters.Add(new ExceptionHandleFilter());
-                    op.Filters.AddService<CachResourceFilter>();
+                    //op.Filters.AddService<CachResourceFilter>();
                 });
                 var app = builder.Build();
                 app.UseMiddleware<LoggingMiddleware>();

@@ -10,6 +10,9 @@ namespace lab1mvc.context
     //class declartion  and inheritance
     public class dblab1 : DbContext
     {
+        public dblab1(DbContextOptions<dblab1> options) : base(options)
+        {
+        }
         //DbSet Property
         public DbSet<Student> Students { get; set; }
         public DbSet<Department> Departments { get; set; }

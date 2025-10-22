@@ -33,8 +33,9 @@
                 @foreach (var sc in Model.StudentCourses)
                 {
                     var course = sc.Course;
-                    var colorClass = sc.Grade < course.MinDegree ? "text-danger fw-bold" : "text-success fw-bold";
-
+                    var colorClass = (course != null && sc.Grade < course.MinDegree)
+                    ? "text-danger fw-bold"
+                    : "text-success fw-bold";
                     <tr>
                         <td>@course.Name</td>
                         <td>@course.Topic</td>
