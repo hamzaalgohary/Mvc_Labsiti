@@ -12,7 +12,6 @@ namespace lab1mvc.Models
         Aswan,
         Tanta
     }
-
     public class Department
     {
         public int Id { get; set; }
@@ -37,8 +36,6 @@ namespace lab1mvc.Models
         public ICollection<Instructor> Instructors { get; set; } = new List<Instructor>();
     }
 }
-
-
 
 
 

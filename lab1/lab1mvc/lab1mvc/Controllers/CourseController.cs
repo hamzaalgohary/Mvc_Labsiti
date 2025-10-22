@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using lab1mvc.Filters;
+using lab1mvc.Validations.LessThanAttribute;
 
 namespace lab1mvc.Controllers
 {
@@ -22,6 +24,10 @@ namespace lab1mvc.Controllers
 
             return Json(true);
         }
+        [Route("allcourses")]
+        [ResultTimingFilter]
+        [TypeFilter(typeof(CachResourceFilter))]
+
         public IActionResult GetAll()
         {
             var courses = _context.Courses
@@ -42,6 +48,7 @@ namespace lab1mvc.Controllers
 
             return View(course);
         }
+        [TypeFilter(typeof(FilterInputCashe))]
 
         public IActionResult GetByName(string name)
         {
@@ -84,6 +91,7 @@ namespace lab1mvc.Controllers
             return View(course);
         }
         [HttpPost]
+
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Course course)
         {
@@ -115,8 +123,163 @@ namespace lab1mvc.Controllers
         {
             throw new Exception("💥 Test exception from controller!");
         }
+        public IActionResult ReadSessionValue()
+        {
+            var value = HttpContext.Session.GetString("UserValue");
+
+            if (string.IsNullOrEmpty(value))
+                return Content("⚠️ No value found in session.");
+
+            return Content($"💾 Value from Session (read in another controller): {value}");
+        }
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//lab5
+//        [AcceptVerbs("GET", "POST")]
+//        public IActionResult CheckNameUnique(string name, int id = 0)
+//        {
+//            bool exists = _context.Courses
+//                .Any(c => c.Name.ToLower() == name.ToLower() && c.Id != id);
+
+//            if (exists)
+//                return Json($"Course name '{name}' already exists!");
+
+//            return Json(true);
+//        }
+//        public IActionResult GetAll()
+//        {
+//            var courses = _context.Courses
+//                .Include(c => c.Department)
+//                .ToList();
+
+//            return View(courses);
+//        }
+
+//        public IActionResult GetById(int id)
+//        {
+//            var course = _context.Courses
+//                .Include(c => c.Department)
+//                .FirstOrDefault(c => c.Id == id);
+
+//            if (course == null)
+//                return NotFound();
+
+//            return View(course);
+//        }
+
+//        public IActionResult GetByName(string name)
+//        {
+//            var courses = _context.Courses
+//                .Include(c => c.Department)
+//                .Where(c => c.Name.Contains(name))
+//                .ToList();
+
+//            return View("GetAll", courses);
+//        }
+
+//        public IActionResult Add()
+//        {
+//            ViewBag.Departments = new SelectList(_context.Departments.ToList(), "Id", "Name");
+//            return View(new Course());
+//        }
+
+//        [HttpPost]
+//        [ValidateAntiForgeryToken]
+//        public IActionResult Add(Course course)
+//        {
+//            if (!ModelState.IsValid)
+//            {
+//                ViewBag.Departments = new SelectList(_context.Departments.ToList(), "Id", "Name", course.DepartmentId);
+//                return View(course);
+//            }
+
+//            _context.Courses.Add(course);
+//            _context.SaveChanges();
+//            return RedirectToAction(nameof(GetAll));
+//        }
+
+//        public IActionResult Edit(int id)
+//        {
+//            var course = _context.Courses.Find(id);
+//            if (course == null)
+//                return NotFound();
+
+//            ViewBag.Departments = new SelectList(_context.Departments.ToList(), "Id", "Name", course.DepartmentId);
+//            return View(course);
+//        }
+//        [HttpPost]
+//        [ValidateAntiForgeryToken]
+//        public IActionResult Edit(Course course)
+//        {
+//            if (!ModelState.IsValid)
+//            {
+//                ViewBag.Departments = new SelectList(_context.Departments.ToList(), "Id", "Name", course.DepartmentId);
+//                return View(course);
+//            }
+
+//            _context.Courses.Update(course);
+//            _context.SaveChanges();
+//            return RedirectToAction(nameof(GetAll));
+//        }
+
+//        [HttpPost]
+//        public IActionResult Delete(int id)
+//        {
+//            var course = _context.Courses.FirstOrDefault(c => c.Id == id);
+
+//            if (course == null)
+//                return Json(new { success = false, message = "Course not found." });
+
+//            _context.Courses.Remove(course);
+//            _context.SaveChanges();
+
+//            return Json(new { success = true, message = "✅ Course deleted successfully." });
+//        }
+//        public IActionResult ThrowError()
+//        {
+//            throw new Exception("💥 Test exception from controller!");
+//        }
+//    }
+//}
 
 
 

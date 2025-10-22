@@ -4,6 +4,8 @@ using System;
 using lab1mvc.context;
 //using lab1mvc.Migrations;
 using lab1mvc.Models;
+using lab1mvc.Filters;
+
 
 
 namespace lab1mvc.Controllers
@@ -11,6 +13,9 @@ namespace lab1mvc.Controllers
     public class DepartmentController : Controller
     {
         dblab1 _context = new dblab1();
+        [Route("allDepartments")]
+        [TypeFilter(typeof(CachResourceFilter))]
+        [HeaderAuthorizeFilter("X-Secret-Key", "hamza123")]
 
         public IActionResult GetAll()
         {
@@ -51,6 +56,7 @@ namespace lab1mvc.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateLocation]
 
         public IActionResult Add(Department department)
         {
@@ -75,6 +81,8 @@ namespace lab1mvc.Controllers
         }
 
         [HttpPost]
+        [ValidateLocation] // <-- our custom filter
+
         public IActionResult Edit(Department department)
         {
 
@@ -114,6 +122,133 @@ namespace lab1mvc.Controllers
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//lab5
+//        public IActionResult GetAll()
+//        {
+//            var depts = _context.Departments
+//                         .Include(d => d.Students)
+//                         .Include(d => d.Courses)
+//                         .Include(d => d.Instructors)
+//                         .ToList();
+
+//            return View(depts);
+//        }
+
+
+//        public IActionResult GetByName(string name)
+//        {
+//            var dept = _context.Departments.FirstOrDefault(d => d.Name == name);
+//            if (dept == null)
+//            {
+//                return NotFound();
+
+//            }
+//            return View("DepartmentDetails", dept);
+
+//        }
+//        public IActionResult Getbyid(int id)
+//        {
+//            var dept = _context.Departments.FirstOrDefault(d => d.Id == id);
+//            if (dept == null)
+//            {
+//                return NotFound();
+
+//            }
+//            return View("DepartmentDetails", dept);
+
+//        }
+//        public IActionResult Add()
+//        {
+//            return View();
+//        }
+//        [HttpPost]
+
+//        public IActionResult Add(Department department)
+//        {
+//            if (department.Name != null)
+//            {
+//                _context.Departments.Add(department);
+//                _context.SaveChanges();
+//                return RedirectToAction(actionName: "GetAll");
+
+
+//            }
+//            return View(viewName: "Add", department);
+
+//        }
+
+
+//        public IActionResult Edit(int id)
+//        {
+//            var dept = _context.Departments.FirstOrDefault(d => d.Id == id);
+//            if (dept == null) return NotFound();
+//            return View(dept);
+//        }
+
+//        [HttpPost]
+//        public IActionResult Edit(Department department)
+//        {
+
+
+//            _context.Update(department);
+//            _context.SaveChanges();
+
+//            return RedirectToAction("GetAll");
+//        }
+
+//        [HttpPost]
+//        public IActionResult Delete(int id)
+//        {
+//            var dept = _context.Departments
+//                .Include(d => d.Students)
+//                .Include(d => d.Courses)
+//                .FirstOrDefault(d => d.Id == id);
+
+//            if (dept == null)
+//                return Json(new { success = false, message = "Department not found." });
+
+//            if (dept.Students.Any())
+//            {
+//                return Json(new { success = false, message = "❌ Cannot delete this department because it has students." });
+//            }
+
+//            _context.Departments.Remove(dept);
+//            _context.SaveChanges();
+
+//            return Json(new { success = true, message = "✅ Department deleted successfully. All related courses were deleted." });
+//        }
+//        public IActionResult Index()
+//        {
+
+//            return View();
+//        }
+
+//    }
+//}
 
 
 

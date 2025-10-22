@@ -34,6 +34,7 @@ namespace lab1mvc.Models
 
 
 
+
 // form lab1 to lab4
 //    public class Course
 //    {

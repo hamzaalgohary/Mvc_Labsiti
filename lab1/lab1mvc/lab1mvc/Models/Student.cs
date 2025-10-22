@@ -39,10 +39,10 @@ namespace lab1mvc.Models
             return $"SSN: {SSN}, Name: {Name}, Age: {Age}, Address: {Address}, Email: {Email}";
         }
     }
+
+
+
 }
-
-
-
 
 
 
