@@ -1,14 +1,17 @@
 ﻿using lab1mvc.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System;
 
 
 
+
 namespace lab1mvc.context
 {
     //class declartion  and inheritance
-    public class dblab1 : DbContext
+    public class dblab1 : IdentityDbContext<ApplicationUser>
     {
         public dblab1(DbContextOptions<dblab1> options) : base(options)
         {
@@ -21,106 +24,83 @@ namespace lab1mvc.context
         public DbSet<StudentCourse> StudentCourses { get; set; }
         public DbSet<CourseInstructor> CourseInstructors { get; set; }
 
-        //Database Configuration to connect database
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=GOHARY\\SQLEXPRESS;Database=lab1mvc;Trusted_Connection=True; TrustServerCertificate=True");
-        }
-        //apis
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<Student>().HasKey(s => s.SSN);
-                modelBuilder.Entity<Student>().Property(s => s.Name).IsRequired().HasMaxLength(100);
-                modelBuilder.Entity<Student>().Property(s => s.Age).IsRequired();
-                modelBuilder.Entity<Student>().Property(s => s.Address).HasMaxLength(200);
-                modelBuilder.Entity<Student>().Property(s => s.Image).IsRequired();
-                modelBuilder.Entity<Student>().Property(s => s.Email).HasMaxLength(100);
+            base.OnModelCreating(modelBuilder); //   Identity
 
-            base.OnModelCreating(modelBuilder);
-            // to cascade in all relationship
-            foreach (var relationship in modelBuilder.Model
-                .GetEntityTypes()
-                .SelectMany(e => e.GetForeignKeys()))
-            {
-                relationship.DeleteBehavior = DeleteBehavior.Restrict;
-            }
+            // Student
+            modelBuilder.Entity<Student>().HasKey(s => s.SSN);
+            modelBuilder.Entity<Student>().Property(s => s.Name).IsRequired().HasMaxLength(100);
+            modelBuilder.Entity<Student>().Property(s => s.Age).IsRequired();
+            modelBuilder.Entity<Student>().Property(s => s.Address).HasMaxLength(200);
+            modelBuilder.Entity<Student>().Property(s => s.Image).IsRequired();
+            modelBuilder.Entity<Student>().Property(s => s.Email).HasMaxLength(100);
 
             modelBuilder.Entity<Student>()
-            .HasOne(s => s.Department)
-            .WithMany(d => d.Students)
-            .HasForeignKey(s => s.DepartmentId)
-            .OnDelete(DeleteBehavior.Restrict)
-            .OnDelete(DeleteBehavior.SetNull);
+                .HasOne(s => s.Department)
+                .WithMany(d => d.Students)
+                .HasForeignKey(s => s.DepartmentId)
+                .OnDelete(DeleteBehavior.SetNull);
 
-
-
-
+            // Department
             modelBuilder.Entity<Department>().HasKey(d => d.Id);
-
             modelBuilder.Entity<Department>().Property(d => d.Branch).HasConversion<string>();
-
-
-
-            modelBuilder.Entity<Department>()
-                .Property(d => d.Name).IsRequired().HasMaxLength(100);
+            modelBuilder.Entity<Department>().Property(d => d.Name).IsRequired().HasMaxLength(100);
+            modelBuilder.Entity<Department>().Property(d => d.Manager).HasMaxLength(100);
+            modelBuilder.Entity<Department>().Property(d => d.Location).HasMaxLength(100);
 
             modelBuilder.Entity<Department>()
-                .Property(d => d.Manager).HasMaxLength(100);
+                .HasMany(d => d.Students)
+                .WithOne(s => s.Department)
+                .OnDelete(DeleteBehavior.Cascade);
 
-
-            modelBuilder.Entity<Department>()
-                .Property(d => d.Location).HasMaxLength(100);
-            modelBuilder.Entity<Department>()
-    .HasMany(d => d.Students)
-    .WithOne(s => s.Department)
-    .OnDelete(DeleteBehavior.Cascade);
-
-
-
+            // Course
             modelBuilder.Entity<Course>().HasKey(c => c.Id);
-            modelBuilder.Entity<Course>()
-    .Property(c => c.Id)
-    .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<Course>()
-                .Property(c => c.Name).IsRequired().HasMaxLength(100);
-
+            modelBuilder.Entity<Course>().Property(c => c.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Course>().Property(c => c.Name).IsRequired().HasMaxLength(100);
             modelBuilder.Entity<Course>().Property(c => c.Topic).HasMaxLength(100);
 
-            modelBuilder.Entity<Course>().HasOne(c => c.Department).WithMany(d => d.Courses)
-                .HasForeignKey(c => c.DepartmentId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Course>()
+                .HasOne(c => c.Department)
+                .WithMany(d => d.Courses)
+                .HasForeignKey(c => c.DepartmentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-
-
-
-
+            //
             modelBuilder.Entity<Instructor>().HasKey(i => i.Id);
+            modelBuilder.Entity<Instructor>().Property(i => i.Name).IsRequired().HasMaxLength(100);
+            modelBuilder.Entity<Instructor>().Property(i => i.Address).HasMaxLength(200);
+            modelBuilder.Entity<Instructor>()
+                .Property(i => i.Salary)
+                .HasColumnType("decimal(18,2)"); //    
 
             modelBuilder.Entity<Instructor>()
-                .Property(i => i.Name).IsRequired().HasMaxLength(100);
-
-
-
-            modelBuilder.Entity<Instructor>().Property(i => i.Address).HasMaxLength(200);
-
-
-            modelBuilder.Entity<Instructor>().HasOne(i => i.Department).WithMany(d => d.Instructors)
-                .HasForeignKey(i => i.DepartmentId).OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<StudentCourse>().HasKey(sc => new { sc.StudentSSN, sc.CourseId });
-
+                .HasOne(i => i.Department)
+                .WithMany(d => d.Instructors)
+                .HasForeignKey(i => i.DepartmentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<StudentCourse>()
-                .HasOne(sc => sc.Student).WithMany(s => s.StudentCourses)
-                .HasForeignKey(sc => sc.StudentSSN);
+     .HasKey(sc => new { sc.StudentSSN, sc.CourseId });
 
+            modelBuilder.Entity<StudentCourse>()
+                .HasOne(sc => sc.Student)
+                .WithMany(s => s.StudentCourses)
+                .HasForeignKey(sc => sc.StudentSSN)
+                .OnDelete(DeleteBehavior.NoAction); //
 
-            modelBuilder.Entity<StudentCourse>().HasOne(sc => sc.Course).WithMany(c => c.StudentCourses)
-                .HasForeignKey(sc => sc.CourseId);
-
+            modelBuilder.Entity<StudentCourse>()
+                .HasOne(sc => sc.Course)
+                .WithMany(c => c.StudentCourses)
+                .HasForeignKey(sc => sc.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CourseInstructor>()
-      .HasKey(ci => new { ci.CourseId, ci.InstructorId });
+                .HasKey(ci => new { ci.CourseId, ci.InstructorId });
+
+            modelBuilder.Entity<CourseInstructor>()
+                .Property(ci => ci.RateHour)
+                .HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<CourseInstructor>()
                 .HasOne(ci => ci.Course)
@@ -133,13 +113,145 @@ namespace lab1mvc.context
                 .WithMany(i => i.CourseInstructors)
                 .HasForeignKey(ci => ci.InstructorId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-
-
-
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//until to lab 7
+//Database Configuration to connect database
+//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//{
+//    optionsBuilder.UseSqlServer("Server=GOHARY\\SQLEXPRESS;Database=lab1mvc;Trusted_Connection=True; TrustServerCertificate=True");
+//}
+
+//        //apis
+//            protected override void OnModelCreating(ModelBuilder modelBuilder)
+//            {
+//                modelBuilder.Entity<Student>().HasKey(s => s.SSN);
+//                modelBuilder.Entity<Student>().Property(s => s.Name).IsRequired().HasMaxLength(100);
+//                modelBuilder.Entity<Student>().Property(s => s.Age).IsRequired();
+//                modelBuilder.Entity<Student>().Property(s => s.Address).HasMaxLength(200);
+//                modelBuilder.Entity<Student>().Property(s => s.Image).IsRequired();
+//                modelBuilder.Entity<Student>().Property(s => s.Email).HasMaxLength(100);
+
+//            base.OnModelCreating(modelBuilder);
+//            // to cascade in all relationship
+//            foreach (var relationship in modelBuilder.Model
+//                .GetEntityTypes()
+//                .SelectMany(e => e.GetForeignKeys()))
+//            {
+//                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+//            }
+
+//            modelBuilder.Entity<Student>()
+//            .HasOne(s => s.Department)
+//            .WithMany(d => d.Students)
+//            .HasForeignKey(s => s.DepartmentId)
+//            .OnDelete(DeleteBehavior.Restrict)
+//            .OnDelete(DeleteBehavior.SetNull);
+
+
+
+
+//            modelBuilder.Entity<Department>().HasKey(d => d.Id);
+
+//            modelBuilder.Entity<Department>().Property(d => d.Branch).HasConversion<string>();
+
+
+
+//            modelBuilder.Entity<Department>()
+//                .Property(d => d.Name).IsRequired().HasMaxLength(100);
+
+//            modelBuilder.Entity<Department>()
+//                .Property(d => d.Manager).HasMaxLength(100);
+
+
+//            modelBuilder.Entity<Department>()
+//                .Property(d => d.Location).HasMaxLength(100);
+//            modelBuilder.Entity<Department>()
+//    .HasMany(d => d.Students)
+//    .WithOne(s => s.Department)
+//    .OnDelete(DeleteBehavior.Cascade);
+
+
+
+//            modelBuilder.Entity<Course>().HasKey(c => c.Id);
+//            modelBuilder.Entity<Course>()
+//    .Property(c => c.Id)
+//    .ValueGeneratedOnAdd();
+
+//            modelBuilder.Entity<Course>()
+//                .Property(c => c.Name).IsRequired().HasMaxLength(100);
+
+//            modelBuilder.Entity<Course>().Property(c => c.Topic).HasMaxLength(100);
+
+//            modelBuilder.Entity<Course>().HasOne(c => c.Department).WithMany(d => d.Courses)
+//                .HasForeignKey(c => c.DepartmentId).OnDelete(DeleteBehavior.Cascade);
+
+
+
+
+
+//            modelBuilder.Entity<Instructor>().HasKey(i => i.Id);
+
+//            modelBuilder.Entity<Instructor>()
+//                .Property(i => i.Name).IsRequired().HasMaxLength(100);
+
+
+
+//            modelBuilder.Entity<Instructor>().Property(i => i.Address).HasMaxLength(200);
+
+
+//            modelBuilder.Entity<Instructor>().HasOne(i => i.Department).WithMany(d => d.Instructors)
+//                .HasForeignKey(i => i.DepartmentId).OnDelete(DeleteBehavior.SetNull);
+
+//            modelBuilder.Entity<StudentCourse>().HasKey(sc => new { sc.StudentSSN, sc.CourseId });
+
+
+//            modelBuilder.Entity<StudentCourse>()
+//                .HasOne(sc => sc.Student).WithMany(s => s.StudentCourses)
+//                .HasForeignKey(sc => sc.StudentSSN);
+
+
+//            modelBuilder.Entity<StudentCourse>().HasOne(sc => sc.Course).WithMany(c => c.StudentCourses)
+//                .HasForeignKey(sc => sc.CourseId);
+
+
+//            modelBuilder.Entity<CourseInstructor>()
+//      .HasKey(ci => new { ci.CourseId, ci.InstructorId });
+
+//            modelBuilder.Entity<CourseInstructor>()
+//                .HasOne(ci => ci.Course)
+//                .WithMany(c => c.CourseInstructors)
+//                .HasForeignKey(ci => ci.CourseId)
+//                .OnDelete(DeleteBehavior.NoAction);
+
+//            modelBuilder.Entity<CourseInstructor>()
+//                .HasOne(ci => ci.Instructor)
+//                .WithMany(i => i.CourseInstructors)
+//                .HasForeignKey(ci => ci.InstructorId)
+//                .OnDelete(DeleteBehavior.NoAction);
+
+
+
+
+//        }
+//    }
+//}
 
 
 //labfrom 1 too 4

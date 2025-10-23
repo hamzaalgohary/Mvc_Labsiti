@@ -1,18 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using lab1mvc.context;
+﻿using lab1mvc.context;
+using lab1mvc.Filters;
 //using lab1mvc.Migrations;
 using lab1mvc.Models;
-using lab1mvc.Filters;
 using lab1mvc.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 
 namespace lab1mvc.Controllers
 {
+    [Authorize]
     public class DepartmentController : Controller
     {
-
         private readonly IGenericRepository<Department> _departmentRepo;
         private readonly IGenericRepository<Student> _studentRepo;
 
@@ -66,6 +67,8 @@ namespace lab1mvc.Controllers
         [ValidateLocation]
         public IActionResult Add(Department department)
         {
+            Console.WriteLine($"Received: *************************************************************************");
+
             if (ModelState.IsValid)
             {
                 _departmentRepo.Add(department);
@@ -120,6 +123,134 @@ namespace lab1mvc.Controllers
         public IActionResult Index() => View();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//until t lab 7
+//        private readonly IGenericRepository<Department> _departmentRepo;
+//        private readonly IGenericRepository<Student> _studentRepo;
+
+//        public DepartmentController(
+//            IGenericRepository<Department> departmentRepo,
+//            IGenericRepository<Student> studentRepo)
+//        {
+//            _departmentRepo = departmentRepo;
+//            _studentRepo = studentRepo;
+//        }
+
+//        [Route("allDepartments")]
+//        //[TypeFilter(typeof(CachResourceFilter))]
+//        [HeaderAuthorizeFilter("X-Secret-Key", "hamza123")]
+//        public IActionResult GetAll()
+//        {
+//            var departments = _departmentRepo.GetAll(
+//                d => d.Students,
+//                d => d.Courses,
+//                d => d.Instructors
+//            );
+
+//            return View(departments);
+//        }
+
+//        public IActionResult GetByName(string name)
+//        {
+//            var dept = _departmentRepo.Find(d => d.Name == name).FirstOrDefault();
+//            if (dept == null)
+//                return NotFound();
+
+//            return View("DepartmentDetails", dept);
+//        }
+
+//        public IActionResult GetById(int id)
+//        {
+//            var dept = _departmentRepo.GetById(id);
+//            if (dept == null)
+//                return NotFound();
+
+//            return View("DepartmentDetails", dept);
+//        }
+
+//        [HttpGet]
+//        public IActionResult Add()
+//        {
+//            return View();
+//        }
+
+//        [HttpPost]
+//        [ValidateLocation]
+//        public IActionResult Add(Department department)
+//        {
+//            if (ModelState.IsValid)
+//            {
+//                _departmentRepo.Add(department);
+//                _departmentRepo.Save();
+//                return RedirectToAction(nameof(GetAll));
+//            }
+
+//            return View(department);
+//        }
+
+//        [HttpGet]
+//        public IActionResult Edit(int id)
+//        {
+//            var dept = _departmentRepo.GetById(id);
+//            if (dept == null)
+//                return NotFound();
+
+//            return View(dept);
+//        }
+
+//        [HttpPost]
+//        [ValidateLocation]
+//        public IActionResult Edit(Department department)
+//        {
+//            if (ModelState.IsValid)
+//            {
+//                _departmentRepo.Update(department);
+//                _departmentRepo.Save();
+//                return RedirectToAction(nameof(GetAll));
+//            }
+
+//            return View(department);
+//        }
+
+//        [HttpPost]
+//        public IActionResult Delete(int id)
+//        {
+//            var dept = _departmentRepo.GetById(id);
+//            if (dept == null)
+//                return Json(new { success = false, message = "Department not found." });
+
+//            var students = _studentRepo.Find(s => s.DepartmentId == id);
+//            if (students.Any())
+//                return Json(new { success = false, message = "❌ Cannot delete department because it has students." });
+
+//            _departmentRepo.Delete(dept);
+//            _departmentRepo.Save();
+
+//            return Json(new { success = true, message = "✅ Department deleted successfully." });
+//        }
+
+//        public IActionResult Index() => View();
+//    }
+//}
 
 
 

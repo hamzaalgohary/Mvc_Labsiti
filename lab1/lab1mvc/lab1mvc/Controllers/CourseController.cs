@@ -8,9 +8,12 @@ using System;
 using lab1mvc.Repository;
 using lab1mvc.Filters;
 using lab1mvc.Validations.LessThanAttribute;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace lab1mvc.Controllers
 {
+    [Authorize]
     public class CourseController : Controller
     {
         private readonly IGenericRepository<Course> _courseRepo;
@@ -54,7 +57,7 @@ namespace lab1mvc.Controllers
             return View(course);
         }
 
-        [TypeFilter(typeof(FilterInputCashe))]
+        //[TypeFilter(typeof(FilterInputCashe))]
         public IActionResult GetByName(string name)
         {
             var courses = _courseRepo.GetAll()
@@ -141,6 +144,141 @@ namespace lab1mvc.Controllers
         }
     }
 }
+
+
+
+
+//until to lab7
+//    public class CourseController : Controller
+//    {
+//        private readonly IGenericRepository<Course> _courseRepo;
+//        private readonly IGenericRepository<Department> _departmentRepo;
+
+//        public CourseController(
+//            IGenericRepository<Course> courseRepo,
+//            IGenericRepository<Department> departmentRepo)
+//        {
+//            _courseRepo = courseRepo;
+//            _departmentRepo = departmentRepo;
+//        }
+
+//        [AcceptVerbs("GET", "POST")]
+//        public IActionResult CheckNameUnique(string name, int id = 0)
+//        {
+//            bool exists = _courseRepo.GetAll()
+//                .Any(c => c.Name.ToLower() == name.ToLower() && c.Id != id);
+
+//            if (exists)
+//                return Json($"Course name '{name}' already exists!");
+
+//            return Json(true);
+//        }
+
+//        [Route("allcourses")]
+//        [ResultTimingFilter]
+//        //[TypeFilter(typeof(CachResourceFilter))]
+//        public IActionResult GetAll()
+//        {
+//            var courses = _courseRepo.GetAll().ToList();
+//            return View(courses);
+//        }
+
+//        public IActionResult GetById(int id)
+//        {
+//            var course = _courseRepo.GetById(id);
+//            if (course == null)
+//                return NotFound();
+
+//            return View(course);
+//        }
+
+//        [TypeFilter(typeof(FilterInputCashe))]
+//        public IActionResult GetByName(string name)
+//        {
+//            var courses = _courseRepo.GetAll()
+//                .Where(c => c.Name.Contains(name))
+//                .ToList();
+
+//            return View("GetAll", courses);
+//        }
+
+//        public IActionResult Add()
+//        {
+//            ViewBag.Departments = new SelectList(_departmentRepo.GetAll(), "Id", "Name");
+//            return View(new Course());
+//        }
+
+//        [HttpPost]
+//        [ValidateAntiForgeryToken]
+//        public IActionResult Add(Course course)
+//        {
+//            if (!ModelState.IsValid)
+//            {
+//                ViewBag.Departments = new SelectList(_departmentRepo.GetAll(), "Id", "Name", course.DepartmentId);
+//                return View(course);
+//            }
+
+//            _courseRepo.Add(course);
+//            _courseRepo.Save(); // ✅ important!
+//            return RedirectToAction(nameof(GetAll));
+//        }
+
+//        public IActionResult Edit(int id)
+//        {
+//            var course = _courseRepo.GetById(id);
+//            if (course == null)
+//                return NotFound();
+
+//            ViewBag.Departments = new SelectList(_departmentRepo.GetAll(), "Id", "Name", course.DepartmentId);
+//            return View(course);
+//        }
+
+//        [HttpPost]
+//        [ValidateAntiForgeryToken]
+//        public IActionResult Edit(Course course)
+//        {
+//            if (!ModelState.IsValid)
+//            {
+//                ViewBag.Departments = new SelectList(_departmentRepo.GetAll(), "Id", "Name", course.DepartmentId);
+//                return View(course);
+//            }
+
+//            _courseRepo.Update(course);
+//            _courseRepo.Save(); // ✅ important!
+//            return RedirectToAction(nameof(GetAll));
+//        }
+
+//        // ✅ Delete (POST)
+//        [HttpPost]
+//        public IActionResult Delete(int id)
+//        {
+//            var course = _courseRepo.GetById(id);
+//            if (course == null)
+//                return Json(new { success = false, message = "Course not found." });
+
+//            _courseRepo.Delete(course);
+//            _courseRepo.Save(); // ✅ important!
+//            return Json(new { success = true, message = "✅ Course deleted successfully." });
+//        }
+
+//        // ✅ Test exception
+//        public IActionResult ThrowError()
+//        {
+//            throw new Exception("💥 Test exception from controller!");
+//        }
+
+//        // ✅ Read session value
+//        public IActionResult ReadSessionValue()
+//        {
+//            var value = HttpContext.Session.GetString("UserValue");
+
+//            if (string.IsNullOrEmpty(value))
+//                return Content("⚠️ No value found in session.");
+
+//            return Content($"💾 Value from Session (read in another controller): {value}");
+//        }
+//    }
+//}
 
 
 

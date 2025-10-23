@@ -7,7 +7,7 @@ namespace lab1mvc.Repository
     {
 
         IEnumerable<T> GetAll();
-        IEnumerable<T> GetAll(params Expression<Func<T, object>>[] includes); // ✅ add this line
+        IEnumerable<T> GetAll(params Expression<Func<T, object>>[] includes); 
 
         T GetById(int id);
         IEnumerable<T> Find(Expression<Func<T, bool>> predicate);

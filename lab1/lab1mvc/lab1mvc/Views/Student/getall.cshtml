@@ -1,5 +1,112 @@
-﻿<!--lab5-->
-@model List<Student>
+﻿@model List<Student>
+
+<h2 class="mb-3 text-primary">All Students</h2>
+
+<div class="mb-3 text-end">
+    @if (!User.IsInRole("Student"))
+    {
+        <a asp-action="Add" class="btn btn-primary mb-3">➕ Add New Student</a>
+    }
+</div>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>SSN</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Department</th>
+            <th>Image</th>
+            <th>Address</th>
+            <th>Email</th>
+            @if (!User.IsInRole("Student"))
+            {
+                <th>Actions</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr id="row-@student.SSN">
+                <td>@student.SSN</td>
+                <td>@student.Name</td>
+                <td>@student.Age</td>
+                <td>@student.DepartmentId</td>
+                <td>
+                    <img src="~/@student.Image"
+                         class="img-thumbnail rounded-circle shadow-sm"
+                         style="width: 70px; height: 70px; object-fit: cover;" />
+                </td>
+                <td>@student.Address</td>
+                <td>@student.Email</td>
+
+                @if (!User.IsInRole("Student"))
+                {
+                    <td>
+
+
+                        <a asp-action="Details" asp-route-id="@student.SSN" class="btn btn-info btn-sm">Details</a>
+                        <a asp-action="Edit" asp-route-id="@student.SSN" class="btn btn-warning btn-sm">Edit</a>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="@student.SSN">Delete</button>
+
+
+                        <span class="ms-2 fw-semibold message" style="display:none;"></span>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).on("click", ".delete-btn", function () {
+            var btn = $(this);
+            var id = btn.data("id");
+            var messageSpan = btn.siblings(".message");
+
+            $.ajax({
+                url: '/Student/Delete/' + id,
+                type: 'POST',
+                success: function (res) {
+                    messageSpan.text(res.message).show();
+
+                    if (res.success) {
+                        messageSpan.css("color", "green");
+                        $("#row-" + id).fadeOut(800, function () {
+                            $(this).remove();
+                        });
+                    } else {
+                        messageSpan.css("color", "red");
+                    }
+
+                    setTimeout(() => messageSpan.fadeOut(), 2000);
+                },
+                error: function () {
+                    messageSpan.text("⚠️ Something went wrong.").css("color", "red").show();
+                    setTimeout(() => messageSpan.fadeOut(), 2000);
+                }
+            });
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--lab5 to 7-->
+@* @model List<Student>
 
 <h2 class="mb-3 text-primary">All Students</h2>
 
@@ -78,7 +185,7 @@
             });
         });
     </script>
-}
+} *@
 
 
 

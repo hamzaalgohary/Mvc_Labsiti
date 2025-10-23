@@ -1,116 +1,241 @@
 ﻿using lab1mvc.context;
 using lab1mvc.Filters;
 using lab1mvc.Middlewares;
+using lab1mvc.Models;
+using lab1mvc.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 using System;
-using lab1mvc.Repository;
 
 
 namespace lab1mvc
 {
     public class Program
     {
-            public static void Main(string[] args)
-            {
-                // 🧠 Configure Serilog logging
-                //Log.Logger = new LoggerConfiguration()
-                //    .WriteTo.Console()
-                //    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
-                //    .CreateLogger();
+        public static async Task Main(string[] args)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
 
-                var builder = WebApplication.CreateBuilder(args);
+            var builder = WebApplication.CreateBuilder(args);
 
             //   use Serilog 
-            //builder.Host.UseSerilog();    
+            builder.Host.UseSerilog();
 
             //cashing filter  
-            //builder.Services.AddMemoryCache();
-            //builder.Services.AddScoped<CachResourceFilter>();
-            //builder.Services.AddScoped<FilterInputCashe>();
-
+            builder.Services.AddMemoryCache();
+            builder.Services.AddScoped<CachResourceFilter>();
+            builder.Services.AddScoped<FilterInputCashe>();
             builder.Services.AddDbContext<dblab1>(options =>
-   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<dblab1>()
+    .AddDefaultTokenProviders();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             builder.Services.AddSession();
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+                 .AddCookie()
+                   .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+                   {
+                       options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                       options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                       options.CallbackPath = "/signin-google";
+                   });
 
+            //builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(op =>
+            {
+                // Global Filters
 
-                //builder.Services.AddControllersWithViews();
-                builder.Services.AddControllersWithViews(op =>
+                op.Filters.Add(new ExceptionHandleFilter());
+                op.Filters.AddService<CachResourceFilter>();
+            });
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.ExpireTimeSpan = TimeSpan.FromDays(14);
+                options.SlidingExpiration = true;
+            });
+            var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                string[] roleNames = { "Admin", "Instructor", "Student" };
+
+                foreach (var roleName in roleNames)
                 {
-                    // Global Filters
-                    op.Filters.Add(new ExceptionHandleFilter());
-                    //op.Filters.AddService<CachResourceFilter>();
-                });
-                var app = builder.Build();
-                app.UseMiddleware<LoggingMiddleware>();
-
-
-                app.UseSession();
-
-
-
-                app.UseMiddleware<GlobalExceptionHandleMiddleware>();
-
-                if (!app.Environment.IsDevelopment())
-                {
-                    app.UseExceptionHandler("/Home/Error");
+                    var roleExists = await roleManager.RoleExistsAsync(roleName);
+                    if (!roleExists)
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(roleName));
+                    }
                 }
-
-                app.UseRouting();
-                app.MapStaticAssets();
-
-                //app.Use(async (context, next) =>
-
-                //{
-
-                //    Console.WriteLine("mid1");
-                //    await next();
-                //    Console.WriteLine("mid 1/2");
-
-                //});
-                //app.Run(async(context) => {
-                //    Console.WriteLine("run");
-                //});
-                //app.Use(async (context, next) =>
-
-                //{
-
-                //    Console.WriteLine("mid2");
-                //    await next();
-                //    Console.WriteLine("mid 2/2");
-
-                //});
-                app.UseAuthorization();
-
-
-                app.MapStaticAssets();
-
-                app.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}")
-                    .WithStaticAssets();
-
-
-                app.Run();
             }
+            app.UseMiddleware<LoggingMiddleware>();
+
+
+            app.UseSession();
+
+
+
+            app.UseMiddleware<GlobalExceptionHandleMiddleware>();
+
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+
+            app.UseRouting();
+            app.MapStaticAssets();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
+
+            app.MapStaticAssets();
+
+            //app.MapControllerRoute(
+            //    name: "default",
+            //    pattern: "{controller=Home}/{action=Index}/{id?}")
+            //    .WithStaticAssets();
+            app.MapControllerRoute(
+                        name: "default",
+                             pattern: "{controller=Account}/{action=Login}/{id?}")
+                                 .WithStaticAssets();
+
+            app.Run();
         }
     }
+}
 
 
 
-        //lab5
-        //        public static void Main(string[] args, WebApplicationBuilder builder)
-        //        {
-        //            // 🧠 Configure Serilog logging
-        //            Log.Logger = new LoggerConfiguration()
-        //                .WriteTo.Console()
-        //                .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
-        //                .CreateLogger();
+
+
+
+
+
+
+
+
+
+
+
+    //until to lab7
+    // public class Program
+    // {
+    //         public static void Main(string[] args)
+    //         {
+    //             // 🧠 Configure Serilog logging
+    //             //Log.Logger = new LoggerConfiguration()
+    //             //    .WriteTo.Console()
+    //             //    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    //             //    .CreateLogger();
+
+//             var builder = WebApplication.CreateBuilder(args);
+
+//         //   use Serilog 
+//         //builder.Host.UseSerilog();    
+
+//         //cashing filter  
+//         //builder.Services.AddMemoryCache();
+//         //builder.Services.AddScoped<CachResourceFilter>();
+//         //builder.Services.AddScoped<FilterInputCashe>();
+
+//         builder.Services.AddDbContext<dblab1>(options =>
+//options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//         builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+//         builder.Services.AddSession();
+
+
+//             //builder.Services.AddControllersWithViews();
+//             builder.Services.AddControllersWithViews(op =>
+//             {
+//                 // Global Filters
+//                 op.Filters.Add(new ExceptionHandleFilter());
+//                 //op.Filters.AddService<CachResourceFilter>();
+//             });
+//             var app = builder.Build();
+//             app.UseMiddleware<LoggingMiddleware>();
+
+
+//             app.UseSession();
+
+
+
+//             app.UseMiddleware<GlobalExceptionHandleMiddleware>();
+
+//             if (!app.Environment.IsDevelopment())
+//             {
+//                 app.UseExceptionHandler("/Home/Error");
+//             }
+
+//             app.UseRouting();
+//             app.MapStaticAssets();
+
+//             //app.Use(async (context, next) =>
+
+//             //{
+
+//             //    Console.WriteLine("mid1");
+//             //    await next();
+//             //    Console.WriteLine("mid 1/2");
+
+//             //});
+//             //app.Run(async(context) => {
+//             //    Console.WriteLine("run");
+//             //});
+//             //app.Use(async (context, next) =>
+
+//             //{
+
+//             //    Console.WriteLine("mid2");
+//             //    await next();
+//             //    Console.WriteLine("mid 2/2");
+
+//             //});
+//             app.UseAuthorization();
+
+
+//             app.MapStaticAssets();
+
+//             app.MapControllerRoute(
+//                 name: "default",
+//                 pattern: "{controller=Home}/{action=Index}/{id?}")
+//                 .WithStaticAssets();
+
+
+//             app.Run();
+//         }
+//     }
+// }
+
+
+
+//lab5
+//        public static void Main(string[] args, WebApplicationBuilder builder)
+//        {
+//            // 🧠 Configure Serilog logging
+//            Log.Logger = new LoggerConfiguration()
+//                .WriteTo.Console()
+//                .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+//                .CreateLogger();
 
 //            var builder = WebApplication.CreateBuilder(args);
 

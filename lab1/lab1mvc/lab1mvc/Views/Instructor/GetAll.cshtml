@@ -2,6 +2,109 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <h2 class="mb-3 text-primary">All Instructors</h2>
+@if (!User.IsInRole("Student"))
+{
+    <div class="mb-3 text-end">
+        <a asp-action="Add" class="btn btn-primary mb-3">➕ Add New Instructor</a>
+    </div>
+}
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Salary</th>
+            <th>Address</th>
+            <th>Department</th>
+            <th>Courses Count</th>
+            @if (!User.IsInRole("Student"))
+            {
+                <th>Actions</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ins in Model)
+        {
+            <tr id="row-@ins.Id">
+                <td>@ins.Id</td>
+                <td>@ins.Name</td>
+                <td>@ins.Age</td>
+                <td>@ins.Salary</td>
+                <td>@ins.Address</td>
+                <td>@ins.DepartmentId</td>
+                <td>@(ins.CourseInstructors?.Count ?? 0)</td>
+                @if (!User.IsInRole("Student"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@ins.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="@ins.Id">Delete</button>
+                        <span class="ms-2 fw-semibold message" style="display:none;"></span>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="container mt-5 text-center">
+    <h2 class="text-primary mb-3">Save Value in Session</h2>
+
+    <form asp-action="SaveToSession" method="post">
+        <div class="form-group mb-3">
+            <input type="text" name="userInput" class="form-control w-50 mx-auto" placeholder="Enter something..." />
+        </div>
+
+        <button type="submit" class="btn btn-dark">Save to Session</button>
+    </form>
+</div>
+<div class="mt-4">
+    <a href="/Instructor/ShowSessionValue" class="btn btn-outline-primary">
+        Show Saved Value
+    </a>
+</div>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).on("click", ".delete-btn", function () {
+            var btn = $(this);
+            var id = btn.data("id");
+            var messageSpan = btn.siblings(".message");
+
+            $.ajax({
+                url: '/Instructor/Delete/' + id,
+                type: 'POST',
+                success: function (res) {
+                    messageSpan.text(res.message).show();
+
+                    if (res.success) {
+                        messageSpan.css("color", "green");
+                        $("#row-" + id).fadeOut(800, function () {
+                            $(this).remove();
+                        });
+                    } else {
+                        messageSpan.css("color", "red");
+                    }
+
+                    // الرسالة تختفي بعد ثانيتين
+                    setTimeout(() => messageSpan.fadeOut(), 2000);
+                },
+                error: function () {
+                    messageSpan.text("⚠️ Something went wrong.").css("color", "red").show();
+                    setTimeout(() => messageSpan.fadeOut(), 2000);
+                }
+            });
+        });
+    </script>
+}
+
+
+<!--    <!--until to lab 7-->
+@* @model List<lab1mvc.Models.Instructor>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2 class="mb-3 text-primary">All Instructors</h2>
 
 <div class="mb-3 text-end">
     <a asp-action="Add" class="btn btn-primary mb-3">➕ Add New Instructor</a>
@@ -247,4 +350,6 @@
             </tr>
         }
     </tbody>
-</table> *@
+@* </table>  *@-->
+     -->
+

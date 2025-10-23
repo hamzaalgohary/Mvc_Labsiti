@@ -1,4 +1,124 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+﻿    <!-- ✅ Navbar -->
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<lab1mvc.Models.ApplicationUser> UserManager
+@inject SignInManager<lab1mvc.Models.ApplicationUser> SignInManager
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+    <div class="container">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a class="navbar-brand fw-bold text-success fs-4" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-mortarboard-fill me-2"></i> My MVC Project
+            </a>
+        }
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto fw-semibold">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <li class="nav-item mx-1">
+                        <a class="nav-link text-light hover-green" asp-controller="Student" asp-action="GetAll">
+                            <i class="bi bi-people-fill me-1"></i> Students
+                        </a>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link text-light hover-green" asp-controller="Department" asp-action="GetAll">
+                            <i class="bi bi-building me-1"></i> Departments
+                        </a>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link text-light hover-green" asp-controller="Instructor" asp-action="GetAll">
+                            <i class="bi bi-person-workspace me-1"></i> Instructors
+                        </a>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link text-light hover-green" asp-controller="Course" asp-action="GetAll">
+                            <i class="bi bi-book me-1"></i> Courses
+                        </a>
+                    </li>
+
+                    <li class="nav-item mx-1">
+                        @{
+                            var currentUser = await UserManager.GetUserAsync(User);
+                        }
+                        @if (currentUser != null)
+                        {
+                            <span class="nav-link text-success">
+                                <i class="bi bi-person-circle me-1"></i> Hello, @currentUser.FullName
+                            </span>
+                        }
+                    </li>
+                    <li class="nav-item mx-1">
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger btn-sm mt-1">Logout</button>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item mx-1">
+                        <a class="btn btn-outline-success btn-sm mt-1" asp-controller="Account" asp-action="Login">Login</a>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="btn btn-outline-primary btn-sm mt-1" asp-controller="Account" asp-action="Register">Register</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .hover-green:hover {
+        color: #00ff99 !important;
+        transition: 0.3s ease;
+    }
+
+    .nav-link {
+        position: relative;
+    }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0%;
+            height: 2px;
+            background-color: #00ff99;
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--lab 7-->
+@* <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
     <div class="container">
         <a class="navbar-brand fw-bold text-success fs-4" href="@Url.Action("Index", "Home")">
             <i class="bi bi-mortarboard-fill me-2"></i> My MVC Project
@@ -59,4 +179,4 @@
         .nav-link:hover::after {
             width: 100%;
         }
-</style>
+</style> *@
